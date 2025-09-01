@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HealthController } from './health.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,12 +11,13 @@ import { HealthController } from './health.controller';
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_URI'), // e.g. mongodb://root:rootpassword@mongo:27017
-        dbName: config.get<string>('MONGODB_DB') || 'chat_app',
+        uri: config.get<string>('MONGODB_URI'),
+        dbName: config.get<string>('MONGODB_DB') || 'youapp',
       }),
     }),
+    AuthModule,
   ],
-  controllers: [AppController, HealthController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
