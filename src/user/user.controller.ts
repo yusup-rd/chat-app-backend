@@ -12,7 +12,14 @@ export class UserController {
 
   @Post('register')
   async register(@Body() dto: RegisterUserDto) {
-    return this.userService.register(dto);
+    const user = await this.userService.register(dto);
+    return {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 
   @Post('login')
