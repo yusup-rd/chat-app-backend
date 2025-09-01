@@ -1,0 +1,47 @@
+services:
+  api:
+    build: .
+    container_name: chat-app-api
+    command: npm run start:dev
+    env_file: .env
+    ports:
+      - '4000:4000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  mongo:
+    image: mongo:7
+    container_name: youapp-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express:1.0.2-20
+    container_name: youapp-mongo-express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: rootpassword
+      ME_CONFIG_MONGODB_URL: mongodb://root:rootpassword@mongo:27017/
+    ports:
+      - '8081:8081'
+    depends_on:
+      - mongo
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: youapp-rabbitmq
+    ports:
+      - '5672:5672' # AMQP
+      - '15672:15672' # Management UI
+
+volumes:
+  mongo-data:
