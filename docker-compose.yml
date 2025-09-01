@@ -5,7 +5,7 @@ services:
     command: npm run start:dev
     env_file: .env
     ports:
-      - '4000:4000'
+      - '5000:5000'
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
