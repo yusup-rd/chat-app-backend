@@ -1,4 +1,13 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -17,4 +26,33 @@ export class LoginUserDto {
 
   @IsNotEmpty()
   password: string;
+}
+
+export class CreateProfileDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  gender?: string;
+
+  @IsOptional()
+  @IsDateString()
+  dob?: string;
+
+  @IsOptional()
+  @IsNumber()
+  height?: number;
+
+  @IsOptional()
+  @IsNumber()
+  weight?: number;
+}
+
+export class UpdateProfileDto extends CreateProfileDto {
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  interests?: string[];
 }

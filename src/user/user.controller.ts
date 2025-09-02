@@ -1,7 +1,22 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Put,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { RegisterUserDto, LoginUserDto } from './user.dto';
+import {
+  RegisterUserDto,
+  LoginUserDto,
+  CreateProfileDto,
+  UpdateProfileDto,
+} from './user.dto';
 import { AuthService } from '../auth/auth.service';
+import { AuthGuard } from '@nestjs/passport';
+import { User as UserDecorator } from '../auth/user.decorator';
 
 @Controller()
 export class UserController {
@@ -30,5 +45,29 @@ export class UserController {
       token,
       user: { id: user._id, username: user.username, email: user.email },
     };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('getProfile')
+  async getProfile(@Req() req) {
+    return this.userService.getProfile(req.user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('createProfile')
+  async createProfile(
+    @UserDecorator('sub') userId: string,
+    @Body() dto: CreateProfileDto,
+  ) {
+    return this.userService.createProfile(userId, dto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put('updateProfile')
+  async updateProfile(
+    @UserDecorator('sub') userId: string,
+    @Body() dto: UpdateProfileDto,
+  ) {
+    return this.userService.updateProfile(userId, dto);
   }
 }
