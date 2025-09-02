@@ -56,7 +56,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Post('createProfile')
   async createProfile(
-    @UserDecorator('sub') userId: string,
+    @UserDecorator('userId') userId: string,
     @Body() dto: CreateProfileDto,
   ) {
     return this.userService.createProfile(userId, dto);
@@ -65,7 +65,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Put('updateProfile')
   async updateProfile(
-    @UserDecorator('sub') userId: string,
+    @UserDecorator('userId') userId: string,
     @Body() dto: UpdateProfileDto,
   ) {
     return this.userService.updateProfile(userId, dto);
