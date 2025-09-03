@@ -8,11 +8,11 @@ import {
   Request,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SendMessageDto, MessageResponseDto } from './chat.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('chat')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard('jwt'))
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
@@ -37,5 +37,10 @@ export class ChatController {
     @Param('userId') otherUserId: string,
   ): Promise<MessageResponseDto[]> {
     return this.chatService.getMessages(req.user.userId, otherUserId);
+  }
+
+  @Get('conversations')
+  async getChatList(@Request() req: any): Promise<any[]> {
+    return this.chatService.getChatList(req.user.userId);
   }
 }
