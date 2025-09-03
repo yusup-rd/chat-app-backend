@@ -54,6 +54,12 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('getAllProfiles')
+  async getAllProfiles(@UserDecorator('userId') userId: string) {
+    return this.userService.getAllProfiles(userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Post('createProfile')
   async createProfile(
     @UserDecorator('userId') userId: string,

@@ -63,6 +63,20 @@ export class UserService {
     };
   }
 
+  async getAllProfiles(currentUserId: string) {
+    const users = await this.userModel
+      .find({ _id: { $ne: currentUserId } })
+      .select('_id username name avatar')
+      .lean();
+
+    return users.map((user) => ({
+      id: user._id,
+      username: user.username,
+      name: user.name || '',
+      avatar: user.avatar || '',
+    }));
+  }
+
   async createProfile(userId: string, profileData: CreateProfileDto) {
     const user = await this.userModel.findById(userId);
     if (!user) throw new NotFoundException('User not found');
