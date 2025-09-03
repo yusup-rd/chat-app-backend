@@ -6,6 +6,7 @@ import {
   Put,
   UseGuards,
   Req,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -57,6 +58,12 @@ export class UserController {
   @Get('getAllProfiles')
   async getAllProfiles(@UserDecorator('userId') userId: string) {
     return this.userService.getAllProfiles(userId);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('getUserProfile/:userId')
+  async getUserProfile(@Param('userId') userId: string) {
+    return this.userService.getUserProfile(userId);
   }
 
   @UseGuards(AuthGuard('jwt'))

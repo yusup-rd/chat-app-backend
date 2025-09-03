@@ -77,6 +77,22 @@ export class UserService {
     }));
   }
 
+  async getUserProfile(userId: string) {
+    const user = await this.userModel
+      .findById(userId)
+      .select('_id username name avatar')
+      .lean();
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return {
+      id: user._id,
+      username: user.username,
+      name: user.name || '',
+      avatar: user.avatar || '',
+    };
+  }
+
   async createProfile(userId: string, profileData: CreateProfileDto) {
     const user = await this.userModel.findById(userId);
     if (!user) throw new NotFoundException('User not found');
