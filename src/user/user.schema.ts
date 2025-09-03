@@ -26,6 +26,9 @@ export class User extends Document {
   interests: string[];
 
   @Prop()
+  avatar?: string;
+
+  @Prop()
   createdAt?: Date;
 
   @Prop()

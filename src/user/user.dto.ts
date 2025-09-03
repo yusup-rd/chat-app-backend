@@ -48,7 +48,12 @@ export class CreateProfileDto {
   @IsOptional()
   @IsNumber()
   weight?: number;
+
+  @IsOptional()
+  @IsString()
+  avatar?: string;
 }
+
 
 export class UpdateProfileDto extends CreateProfileDto {
   @IsOptional()

@@ -59,6 +59,7 @@ export class UserService {
       height: userDoc.height || null,
       weight: userDoc.weight || null,
       interests: userDoc.interests || [],
+      avatar: userDoc.avatar || '',
     };
   }
 
