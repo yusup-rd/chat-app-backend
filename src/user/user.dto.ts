@@ -54,7 +54,6 @@ export class CreateProfileDto {
   avatar?: string;
 }
 
-
 export class UpdateProfileDto extends CreateProfileDto {
   @IsOptional()
   @IsArray()
