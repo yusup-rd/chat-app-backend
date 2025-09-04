@@ -13,8 +13,10 @@ import { ChatModule } from './chat/chat.module';
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_URI'),
-        dbName: config.get<string>('MONGODB_DB') || 'youapp',
+        uri:
+          config.get<string>('MONGODB_URI') ||
+          'mongodb://root:rootpassword@mongo:27017',
+        dbName: config.get<string>('MONGODB_DB') || 'chat-app',
       }),
     }),
     AuthModule,

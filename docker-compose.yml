@@ -10,12 +10,15 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - mongo
-      - rabbitmq
+      mongo:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
 
   mongo:
     image: mongo:7
-    container_name: youapp-mongo
+    container_name: chat-app-mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
@@ -26,8 +29,10 @@ services:
 
   mongo-express:
     image: mongo-express:1.0.2-20
-    container_name: youapp-mongo-express
+    container_name: chat-app-mongo-express
     environment:
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: rootpassword
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: rootpassword
       ME_CONFIG_MONGODB_URL: mongodb://root:rootpassword@mongo:27017/
@@ -38,10 +43,17 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.13-management
-    container_name: youapp-rabbitmq
+    container_name: chat-app-rabbitmq
     ports:
-      - '5672:5672' # AMQP
-      - '15672:15672' # Management UI
+      - '5672:5672'
+      - '15672:15672'
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
 
 volumes:
   mongo-data:
