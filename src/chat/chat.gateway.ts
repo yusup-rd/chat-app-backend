@@ -55,6 +55,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.disconnect();
         return;
       }
+
+      const existingSocketId = this.connectedUsers.get(client.userId);
+      if (existingSocketId && existingSocketId !== client.id) {
+        const existingSocket =
+          this.server.sockets.sockets.get(existingSocketId);
+        if (existingSocket) {
+          this.logger.log(
+            `Disconnecting previous socket for user ${client.userId}`,
+          );
+          existingSocket.disconnect();
+        }
+      }
+
       this.connectedUsers.set(client.userId, client.id);
 
       this.logger.log(
